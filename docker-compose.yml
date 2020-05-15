@@ -1,0 +1,14 @@
+tftp:
+  build: tftp
+  restart: always
+  ports:
+    - 192.168.2.1:69:69/udp
+  env_file:
+    - .env
+  environment:
+    - RANCHER_CONFIG_URL=http://192.168.2.1:80/Imager.yml
+cloud-config:
+  build: rancher-config
+  restart: always
+  ports:
+    - 192.168.2.1:80:80
