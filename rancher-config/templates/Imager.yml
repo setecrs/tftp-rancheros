@@ -1,0 +1,60 @@
+#cloud-config
+hostname: pxe-{{.IP}}
+rancher:
+  services:
+    zabbix-agent:
+      image: zabbix/zabbix-agent:alpine-3.0-latest
+      privileged: true
+      hostname: pxe-{{.IP}}
+      environment:
+        - ZBX_SERVER_HOST={{.Zabbix}}
+      net: host
+  bootstrap_docker:
+    registry_mirror: {{.RegistryMirror.URL}}
+  docker:
+    registry_mirror: {{.RegistryMirror.URL}}
+  system_docker:
+    registry_mirror: {{.RegistryMirror.URL}}
+  sysctl:
+    net.ipv6.conf.all.disable_ipv6: 1
+  network:
+    dns:
+      nameservers: {{.DNS}}
+{{- if .Mounts}}
+mounts:
+{{- range .Mounts}}
+  - [ "{{index . 0}}", "{{ index . 1 }}", "{{ index . 2 }}", "{{index . 3 }}" ]
+{{- end}}
+{{- end}}
+write_files:
+  - path: /etc/profile.d/custom.sh
+    permissions: "0755"
+    owner: root
+    content: |
+      #!/bin/bash
+      tty1(){ imager; }
+      tty2(){ echo -n; }
+      tty3(){ echo -n; }
+  {{- range .Mounts}}
+  - path: {{ index . 1 }}/.keep
+  {{- end}}
+  - path: /etc/profile.d/functions.sh
+    permissions: "0755"
+    owner: root
+    content: |
+{{ include "functions.sh" . | indent 6}}
+  - path: /etc/profile.d/tty.sh
+    permissions: "0755"
+    owner: root
+    content: |
+{{ include "tty.sh" . | indent 6 }}
+  - path: /etc/respawn.conf
+    permissions: "0644"
+    owner: root
+    content: |
+{{ include "respawn.conf" . | indent 6}}
+
+ssh_authorized_keys:
+  {{- range .SSHAuthorizedKeys}}
+  - {{.}}
+  {{- end}}

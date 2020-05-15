@@ -1,0 +1,12 @@
+{
+  "zabbix": "192.168.2.1",
+  "DNS":  "[\"8.8.8.8\" ]",
+  "mounts": [
+    ["/mnt/cloud/operacoes", "/operacoes", "none", "bind"]
+  ],
+  "ssh_authorized_keys": [
+  ],
+  "registry-mirror": {
+    "url": "http://192.168.2.1:5000"
+  }
+}
