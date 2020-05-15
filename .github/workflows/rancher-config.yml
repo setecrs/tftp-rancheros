@@ -1,0 +1,33 @@
+name: rancher-config_ci-cd
+
+on: ['push']
+
+env:
+  REPO: setecrs/rancher-config
+  FOLDER: rancher-config
+  VERSION: ${GITHUB_REF#refs/tags/rancher-config_}
+
+jobs:
+  deploy:
+    if: startsWith(github.ref, 'refs/tags/rancher-config_')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: pull latest (for cache)
+        run: docker pull ${{env.REPO}}:latest || echo could not pull
+
+      - name: Docker build latest
+        run: docker build --cache-from ${{env.REPO}}:latest ${{env.FOLDER}} -t ${{env.REPO}}:latest
+        
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+        
+      - name: Docker push latest
+        run: docker push ${{env.REPO}}:latest
+        
+      - name: Docker push - semver
+        run: |
+          docker tag ${{env.REPO}}:latest ${{env.REPO}}:${{env.VERSION}}
+          docker push ${{env.REPO}}:${{env.VERSION}}
+
