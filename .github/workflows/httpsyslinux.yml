@@ -1,4 +1,4 @@
-name: http_ci-cd
+name: httpsyslinux_ci-cd
 
 on: ['push']
 
