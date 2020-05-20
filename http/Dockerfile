@@ -3,8 +3,7 @@ FROM nginx:1.17-alpine
 RUN apk add --no-cache syslinux 
 
 WORKDIR /usr/share/nginx/html/
-RUN cp -a /usr/share/syslinux ./
-RUN ln -s syslinux/pxelinux.0
+RUN cp -a /usr/share/syslinux/* ./
 
 ENV RANCHER_VERSION=1.5.5
 RUN wget http://releases.rancher.com/os/v${RANCHER_VERSION}/vmlinuz
