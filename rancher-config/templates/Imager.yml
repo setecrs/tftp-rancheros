@@ -27,14 +27,6 @@ mounts:
 {{- end}}
 {{- end}}
 write_files:
-  - path: /etc/profile.d/custom.sh
-    permissions: "0755"
-    owner: root
-    content: |
-      #!/bin/bash
-      tty1(){ imager; }
-      tty2(){ echo -n; }
-      tty3(){ echo -n; }
   {{- range .Mounts}}
   - path: {{ index . 1 }}/.keep
   {{- end}}
