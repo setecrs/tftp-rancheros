@@ -86,6 +86,12 @@ type singleTemplate struct {
 }
 
 func (t singleTemplate) serveTemplate(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := newTemplate() //this line refreshes the template at every request
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, http.StatusText(500), 500)
+	}
+
 	tp := filepath.Clean(r.URL.Path)
 	tp = strings.Trim(tp, "/")
 	fp := filepath.Join("templates", tp)
@@ -111,7 +117,7 @@ func (t singleTemplate) serveTemplate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = t.tmpl.ExecuteTemplate(w, tp, t.data)
+	err = tmpl.ExecuteTemplate(w, tp, t.data)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, http.StatusText(500), 500)
