@@ -23,7 +23,7 @@ imager(){
     {{- end}}
     -v /dev/:/dev/ \
     -e GRAPHQL_URL='http://192.168.2.79/graphql' \
-    setecrs/imager:2.4.0 $@
+    setecrs/imager:2.5.0 $@
 }
 udevadm-trigger(){
  docker exec udev udevadm trigger -s block

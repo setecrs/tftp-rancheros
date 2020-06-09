@@ -1,3 +1,3 @@
 #!/bin/bash
 [ $(tty) == '/dev/tty1' ] && imager
-exit
+[ $(tty) == '/dev/tty1' ] && exit
