@@ -11,7 +11,7 @@ udev(){
     --privileged \
     --net=host \
     -v /dev/:/dev/ \
-    setecrs/imager:2.4.0 udevd
+    setecrs/imager:2.5.0 udevd
 }
 imager(){
   waitfor udev
